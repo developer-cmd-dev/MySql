@@ -47,6 +47,7 @@ values(
 
 
 select * from employee;
+select * from department;
 
 
 create table department(
@@ -64,7 +65,15 @@ alter table employee
 add column emergency_contact varchar(20) not null check(emergency_contact regexp "^(?:\+91[\-\s]?|0)?[6-9]\d{9}$
 ");
 
-alter table emp
-add column department_id int;
+alter table employee
+modify column department_id int not null ;
 
+insert into department(
+department_name, location
+)
+values("IT","Building A"),("HR","Building B"),("MARKETING","Building E");
+
+alter table employee  drop  department_id;
+
+alter table employee add foreign key (department_id) references department(department_id);
 
