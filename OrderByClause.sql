@@ -30,3 +30,18 @@ select * from products order by price;
 select * from products order by price desc;
 
 select * from products order by category,price;
+
+-- sorting with where caluse.
+select * from products where category="Electronics" order by price;
+
+-- sorting with functions.
+select product_name ,length('product_name') from  products  ;
+select * from products order by length('product_name');
+
+-- Custom Sorting
+
+select * from products order by field(category,'Electronics','Appliances','Furniture');
+
+
+
+
