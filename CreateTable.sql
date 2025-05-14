@@ -1,79 +1,74 @@
-show databases;
 create database test;
 use test;
-
-create table employee(
+create table employees(
 employee_id int primary key auto_increment,
-fist_name varchar(50) not null,
+first_name varchar(50) not null,
 last_name varchar(50) not null,
 email varchar(50) unique,
+phone_number varchar(10) unique,
 hire_date date default (current_date()),
 salary decimal(10,2) check (salary>0.0),
-phone_number varchar(20) unique,
-employee_status enum("active","on leave","terminated") default "active",
+employment_status enum('active','on leave','terminated') default 'active',
 created_at timestamp default current_timestamp,
 updated_at timestamp default current_timestamp on update current_timestamp
 
 );
 
-insert into employee(
-fist_name,
+
+insert into employees(
+first_name,
 last_name,
 email,
+phone_number,
 salary,
-phone_number
+employment_status
 )
 values(
-"Dev",
-"Kumar",
-"devkmandal0@gmail.com",
-100000,
-"+918051501320"
-),
-(
+"Vaidehi",
+"Mandal",
+"vaidehi@gmail.com",
+"1231323128",
+800000.00,
+"Active"
+),(
 "Naman",
 "Kumar",
 "naman@gmail.com",
-120000,
-"+918051501321"
-),
-(
-"Vaidehi",
-"Kumari",
-"vaidehi@gmail.com",
-500000,
-"+918051501322"
-);
+"1231323167",
+400000.00,
+"Active");
 
 
-select * from employee;
-select * from department;
+select * from employees;
 
+alter table employees
+modify column emergency_contact varchar(50) not null ;
 
-create table department(
+alter table employees
+drop column emergency_contact;
+
+create table departments(
 department_id int primary key auto_increment,
-department_name varchar(50) not null,
-location varchar(200),
-created_at timestamp default current_timestamp,
-updated_at timestamp default current_timestamp on update current_timestamp
+department_name varchar(100),
+location varchar (500),
+created_at timestamp default (current_timestamp()),
+updated_at timestamp default (current_timestamp()) on update current_timestamp
 );
 
-alter table employee
-add column description text;
+insert into departments(department_name,location)
+values('IT','Banglore'),('HR','Chennai'),('SALES','London');
 
-alter table employee
-add column emergency_contact varchar(20) not null check(emergency_contact regexp "^(?:\+91[\-\s]?|0)?[6-9]\d{9}$
-");
+select * from departments;
 
-alter table employee
-modify column department_id int not null ;
+alter table employees
+add column department_id int;
 
-insert into department(
-department_name, location
-)
-values("IT","Building A"),("HR","Building B"),("MARKETING","Building E");
 
-alter table employee  drop  department_id;
+alter table employees
+modify column department_id int not null;
 
-alter table employee add foreign key (department_id) references department(department_id);
+alter table employees
+add foreign key (department_id) references departments(deparment_id);
 
+alter table employees
+ add foreign key (department_id) references departments(department_id);
