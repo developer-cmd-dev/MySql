@@ -21,27 +21,12 @@ INSERT INTO products VALUES
 (4, 'Gaming Mouse', 'Electronics', 59.99, 200, '2024-01-17 14:20:00'),
 (5, 'Bookshelf', 'Furniture', 149.99, 25, '2024-01-13 16:45:00');
 
--- Section 2: Basic Sorting Operations
--- ---------------------------------
--- Display all records (unsorted)
-SELECT * FROM products;
+use db12;
+show tables;
+select * from products;
 
 select * from products order by price;
 select * from products order by price desc;
 
+-- working with multiple columns
 select * from products order by category,price;
-
--- sorting with where caluse.
-select * from products where category="Electronics" order by price;
-
--- sorting with functions.
-select product_name ,length('product_name') from  products  ;
-select * from products order by length('product_name');
-
--- Custom Sorting
-
-select * from products order by field(category,'Electronics','Appliances','Furniture');
-
-
-
-

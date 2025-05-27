@@ -23,8 +23,10 @@ INSERT INTO products (name, price, category) VALUES
 SELECT * FROM products ORDER BY id LIMIT 2;
 
 -- pagination
-
 select * from products order by id limit 2 offset 2;
 
 -- generic formula for pagination
-select * from products order by id limit (1-1)*3,3;
+-- select * from products order by id limit (1-1)*3,3;
+
+show tables;
+select * from products order by rand() limit 5;
