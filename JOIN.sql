@@ -1,76 +1,93 @@
--- SQL INNER JOIN Lecture
--- An INNER JOIN returns only the rows where there is a match in both tables based on the specified join condition.
--- If there's no match, the rows from both tables are excluded from the result set.
+show databases;
+use db_inner_join;
+show tables;
+select * from authors;
+select * from books;
 
--- Create database
-CREATE DATABASE db_inner_join;
-USE db_inner_join;
+select * from books inner join authors on books.author_id = authors.author_id;select * from books inner join authors on books.author_id = authors.author_id;
+select * 
+from books 
+inner join authors 
+on books.author_id = authors.author_id;
 
--- Create authors table
-CREATE TABLE authors (
-    author_id INT PRIMARY KEY,
-    first_name VARCHAR(50),
-    last_name VARCHAR(50),
-    birth_year INT
+
+select books.title ,authors.first_name, authors.last_name from books 
+inner join authors 
+on books.author_id = authors.author_id 
+where publication_year>'1940' order by birth_year;
+
+-- how many books each author has written
+
+select a.first_name, a.last_name,count(*) as total_book_written from authors as a inner join books as b on a.author_id = b.author_id
+group by a.author_id having total_book_written>1
+;
+
+
+create table categories(
+category_id int primary key,
+category_name varchar(50)
 );
 
--- Create books table
-CREATE TABLE books (
-    book_id INT PRIMARY KEY,
-    title VARCHAR(100),
-    author_id INT,
-    publication_year INT,
-    price DECIMAL(6,2)
+insert into categories(
+category_id,
+category_name)
+values(1, 'Fiction'),
+    (2, 'Classic'),
+    (3, 'Romance'),
+    (4, 'Political'),
+    (5, 'Mystery'),
+    (6, 'Adventure');
+
+select * from categories;
+
+create table book_categories(
+book_id int,
+category_id int,
+primary key(book_id,category_id)
 );
 
--- Insert data into authors table
-INSERT INTO authors (author_id, first_name, last_name, birth_year)
+INSERT INTO book_categories (book_id, category_id)
 VALUES 
-    (1, 'Jane', 'Austen', 1775),
-    (2, 'George', 'Orwell', 1903),
-    (3, 'Ernest', 'Hemingway', 1899),
-    (4, 'Agatha', 'Christie', 1890),
-    (5, 'J.K.', 'Rowling', 1965);
+    (101, 1), (101, 2), (101, 3), -- Pride and Prejudice: Fiction, Classic, Romance
+    (102, 1), (102, 2), (102, 4), -- 1984: Fiction, Classic, Political
+    (103, 1), (103, 2), (103, 4), -- Animal Farm: Fiction, Classic, Political
+    (104, 1), (104, 2), (104, 6), -- The Old Man and the Sea: Fiction, Classic, Adventure
+    (105, 1), (105, 5), -- Murder on the Orient Express: Fiction, Mystery
+    (106, 1), (106, 5), -- Death on the Nile: Fiction, Mystery
+    (107, 1), (107, 2), (107, 3), -- Emma: Fiction, Classic, Romance
+    (108, 1), (108, 2), (108, 6); -- For Whom the Bell Tolls: Fiction, Classic, Adventure
 
--- Insert data into books table
-INSERT INTO books (book_id, title, author_id, publication_year, price)
-VALUES 
-    (101, 'Pride and Prejudice', 1, 1813, 12.99),
-    (102, '1984', 2, 1949, 14.50),
-    (103, 'Animal Farm', 2, 1945, 11.75),
-    (104, 'The Old Man and the Sea', 3, 1952, 10.99),
-    (105, 'Murder on the Orient Express', 4, 1934, 13.25),
-    (106, 'Death on the Nile', 4, 1937, 12.50),
-    (107, 'Emma', 1, 1815, 11.99),
-    (108, 'For Whom the Bell Tolls', 3, 1940, 15.75);
+select * from book_categories;
 
--- Display table contents
-SELECT * FROM authors;
-SELECT * FROM books;
+-- get books with there authors and categories;
 
--- Retrieve books with their author's information
+select title,first_name,last_name,
+group_concat(category_name)
+from books 
+inner join 
+authors as a  on books.author_id = a.author_id 
+inner join
+book_categories as bc on books.book_id = bc.book_id
+inner join 
+categories as c on bc.category_id = c.category_id
+group by books.book_id
+ ;
 
-select * from authors
-join books on authors.author_id = books.author_id;
+-- return books published before 1950 by authors born before 1900
 
--- how many books each author written
-select authors.first_name, authors.last_name, count(*) as book_count from authors join books on authors.author_id = books.author_id group by authors.author_id ;
+select title,publication_year, first_name, last_name ,birth_year
+from books as b 
+inner join 
+authors a on b.author_id=a.author_id
+and publication_year < 1950 and birth_year <1900;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- find author who written book more than 1;
+select a.first_name, a.last_name, group_concat(b.title separator ' | ') ,count(*) as total_book_written 
+from authors as a 
+inner join 
+books as b on a.author_id = b.author_id
+group by a.author_id having total_book_written>1
+;
 
 
 
